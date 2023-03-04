@@ -2,8 +2,8 @@ import { LocalizedPeer, PeerSignal, SignalResp, SignalType } from "./types.ts";
 import { BSON, oak } from "./deps.ts";
 import { getPeer, newLocalizedPeer, registerPeer } from "./dao/peer.ts";
 import {
+  newDataRecvSignal,
   newInitSignal,
-  newReceiverDataSignal,
   newRespSignal,
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
@@ -36,7 +36,7 @@ function setupPeerWs(localizedPeer: LocalizedPeer) {
     }
     // handle peer signal
     switch (signal.type) {
-      case SignalType.SENDER_DATA: {
+      case SignalType.DATA_SEND: {
         // get receiver
         const receiver = getPeer(signal.receiver);
         if (!receiver) {
@@ -48,7 +48,7 @@ function setupPeerWs(localizedPeer: LocalizedPeer) {
           break;
         }
         // forward data to receiver
-        receiver.ws.send(BSON.serialize(newReceiverDataSignal(
+        receiver.ws.send(BSON.serialize(newDataRecvSignal(
           receiver.signalCounter++,
           localizedPeer.pid,
           signal.data,
@@ -56,7 +56,7 @@ function setupPeerWs(localizedPeer: LocalizedPeer) {
         ws.send(BSON.serialize(newRespSignal(
           localizedPeer.signalCounter++,
           signal.sid,
-          SignalResp.OK,
+          SignalResp.SENDED,
         )));
         break;
       }

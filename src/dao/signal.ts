@@ -1,8 +1,8 @@
 import {
+  DataRecvSignal,
+  DataSendSignal,
   InitSignal,
-  ReceiverDataSignal,
   RespSignal,
-  SenderDataSignal,
   SignalData,
   SignalResp,
   SignalType,
@@ -29,26 +29,26 @@ export function newRespSignal(
   };
 }
 
-export function newReceiverDataSignal(
+export function newDataRecvSignal(
   sid: number,
   sender: number,
   data: SignalData,
-): ReceiverDataSignal {
+): DataRecvSignal {
   return {
-    type: SignalType.RECEIVER_DATA,
+    type: SignalType.DATA_RECV,
     sid,
     sender,
     data,
   };
 }
 
-export function newSenderDataSignal(
+export function newDataSendSignal(
   sid: number,
   receiver: number,
   data: SignalData,
-): SenderDataSignal {
+): DataSendSignal {
   return {
-    type: SignalType.SENDER_DATA,
+    type: SignalType.DATA_SEND,
     sid,
     receiver,
     data,

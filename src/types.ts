@@ -34,11 +34,11 @@ export interface LocalizedPeer extends Peer {
 export enum SignalType {
   // node signal type
   INIT,
-  RECEIVER_DATA,
   RESP, // response
+  DATA_RECV,
 
   // peer signal type
-  SENDER_DATA,
+  DATA_SEND,
 }
 
 export type SignalData =
@@ -49,8 +49,8 @@ export type SignalData =
   | BSON.Document;
 
 export enum SignalResp {
-  // response for SenderDataSignal
-  OK,
+  // response for DataSendSignal
+  SENDED,
   NOT_FOUND,
 
   // response for others
@@ -74,14 +74,14 @@ export interface RespSignal extends BasicSignal {
   resp: SignalResp;
 }
 
-export interface ReceiverDataSignal extends BasicSignal {
-  type: SignalType.RECEIVER_DATA;
+export interface DataRecvSignal extends BasicSignal {
+  type: SignalType.DATA_RECV;
   sender: number; // sender pid
   data: SignalData;
 }
 
-export interface SenderDataSignal extends BasicSignal {
-  type: SignalType.SENDER_DATA;
+export interface DataSendSignal extends BasicSignal {
+  type: SignalType.DATA_SEND;
   receiver: number; // receiver pid
   data: SignalData;
 }
@@ -89,8 +89,8 @@ export interface SenderDataSignal extends BasicSignal {
 export type NodeSignal =
   | InitSignal
   | RespSignal
-  | ReceiverDataSignal;
+  | DataRecvSignal;
 
-export type PeerSignal = SenderDataSignal;
+export type PeerSignal = DataSendSignal;
 
 export type Signal = NodeSignal | PeerSignal;
