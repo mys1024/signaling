@@ -42,7 +42,7 @@ function setupPeerWs(localizedPeer: LocalizedPeer) {
         if (!receiver) {
           ws.send(BSON.serialize(newRespSignal(
             localizedPeer.signalCounter++,
-            signal.sid,
+            signal.seq,
             SignalResp.NOT_FOUND,
           )));
           break;
@@ -55,7 +55,7 @@ function setupPeerWs(localizedPeer: LocalizedPeer) {
         )));
         ws.send(BSON.serialize(newRespSignal(
           localizedPeer.signalCounter++,
-          signal.sid,
+          signal.seq,
           SignalResp.SENDED,
         )));
         break;
@@ -63,7 +63,7 @@ function setupPeerWs(localizedPeer: LocalizedPeer) {
       default: {
         ws.send(BSON.serialize(newRespSignal(
           localizedPeer.signalCounter++,
-          signal.sid,
+          signal.seq,
           SignalResp.INVALID_SIGNAL_TYPE,
         )));
         break;

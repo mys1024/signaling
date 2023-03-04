@@ -8,48 +8,48 @@ import {
   SignalType,
 } from "../types.ts";
 
-export function newInitSignal(sid: number, token: string): InitSignal {
+export function newInitSignal(seq: number, token: string): InitSignal {
   return {
     type: SignalType.INIT,
-    sid,
+    seq,
     token,
   };
 }
 
 export function newRespSignal(
-  sid: number,
-  about: number,
+  seq: number,
+  ack: number,
   resp: SignalResp,
 ): RespSignal {
   return {
     type: SignalType.RESP,
-    sid,
-    about,
+    seq,
+    ack,
     resp,
   };
 }
 
 export function newDataRecvSignal(
-  sid: number,
+  seq: number,
   sender: number,
   data: SignalData,
 ): DataRecvSignal {
   return {
     type: SignalType.DATA_RECV,
-    sid,
+    seq,
     sender,
     data,
   };
 }
 
 export function newDataSendSignal(
-  sid: number,
+  seq: number,
   receiver: number,
   data: SignalData,
 ): DataSendSignal {
   return {
     type: SignalType.DATA_SEND,
-    sid,
+    seq,
     receiver,
     data,
   };

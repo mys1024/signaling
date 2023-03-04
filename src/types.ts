@@ -60,7 +60,7 @@ export enum SignalResp {
 
 export interface BasicSignal {
   type: SignalType;
-  sid: number; // signal's ID
+  seq: number; // signal sequence number
 }
 
 export interface InitSignal extends BasicSignal {
@@ -70,7 +70,7 @@ export interface InitSignal extends BasicSignal {
 
 export interface RespSignal extends BasicSignal {
   type: SignalType.RESP;
-  about: number; // about which signal
+  ack: number; // acknowledge a signal sequence number
   resp: SignalResp;
 }
 
