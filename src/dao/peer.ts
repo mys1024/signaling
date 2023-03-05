@@ -45,7 +45,7 @@ export function newLocalizedPeer(exp: Date, ws: WebSocket) {
     snid: LOCAL_SNID,
     exp,
     ws,
-    signalCounter: 1,
+    signalSeq: 1,
   };
   // return
   return peer;

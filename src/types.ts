@@ -21,9 +21,9 @@ export interface Peer {
 
 export interface LocalizedPeer extends Peer {
   /**
-   * Signal counter.
+   * Signal sequence number.
    */
-  signalCounter: number;
+  signalSeq: number;
 
   /**
    * Peer's Websocket instance.
