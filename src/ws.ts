@@ -10,6 +10,9 @@ import { syncIgnoreError } from "./utils/plain.ts";
 
 export function setupPeerWs(peer: LocalizedPeer) {
   const ws = peer.ws;
+  if (!ws) {
+    throw new Error(`Peer's property 'ws' is not set.`);
+  }
 
   ws.onopen = () => {
     // send init signal
@@ -39,6 +42,12 @@ export function setupPeerWs(peer: LocalizedPeer) {
           break;
         }
         // forward data to receiver
+        if (!receiver.ws) {
+          ws.send(BSON.serialize(
+            newRespSignal(peer.sigSeq++, sig.seq, SignalResp.OFFLINE),
+          ));
+          break;
+        }
         receiver.ws.send(BSON.serialize(
           newDataRecvSignal(receiver.sigSeq++, peer.pid, sig.data),
         ));

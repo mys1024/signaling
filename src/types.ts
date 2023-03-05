@@ -21,7 +21,7 @@ export interface LocalizedPeer extends Peer {
   /**
    * Peer's Websocket instance.
    */
-  ws: WebSocket;
+  ws?: WebSocket;
 }
 
 export enum SignalType {
@@ -46,6 +46,7 @@ export type SignalData =
 export enum SignalResp {
   // response for DataSendSignal
   SENDED,
+  OFFLINE,
   NOT_FOUND,
 
   // response for others
