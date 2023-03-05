@@ -7,13 +7,6 @@ export interface Peer {
   pid: number;
 
   /**
-   * Signaling node's ID.
-   * The value should be an integer in the interval [1, 0x7F_FF_FF_FF].
-   * This property indicates which Signaling node this peer's websocket is connecting to.
-   */
-  snid: number;
-
-  /**
    * Expiration time.
    */
   exp: Date;
@@ -32,7 +25,7 @@ export interface LocalizedPeer extends Peer {
 }
 
 export enum SignalType {
-  // node signal type
+  // agent signal type
   INIT,
   RESP, // response
   DATA_RECV,
@@ -45,8 +38,10 @@ export type SignalData =
   | string
   | number
   | boolean
+  | null
   | BSON.Binary
-  | BSON.Document;
+  | BSON.Document
+  | BSON.Document[];
 
 export enum SignalResp {
   // response for DataSendSignal
@@ -65,6 +60,7 @@ export interface BasicSignal {
 
 export interface InitSignal extends BasicSignal {
   type: SignalType.INIT;
+  pid: number;
   token: string;
 }
 
@@ -86,11 +82,11 @@ export interface DataSendSignal extends BasicSignal {
   data: SignalData;
 }
 
-export type NodeSignal =
+export type AgentSignal =
   | InitSignal
   | RespSignal
   | DataRecvSignal;
 
 export type PeerSignal = DataSendSignal;
 
-export type Signal = NodeSignal | PeerSignal;
+export type Signal = AgentSignal | PeerSignal;

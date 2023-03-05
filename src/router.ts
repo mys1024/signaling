@@ -18,9 +18,9 @@ router.get("/ws", (ctx) => {
   // new and register a peer
   const peer = newLocalizedPeer(new Date(), ws);
   registerPeer(peer);
-  // setup ws
   setupPeerWs(peer);
-  // no need to set ctx.response
+  // response
+  ctx.response.status = 101;
 });
 
 export default router;

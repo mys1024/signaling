@@ -8,10 +8,15 @@ import {
   SignalType,
 } from "../types.ts";
 
-export function newInitSignal(seq: number, token: string): InitSignal {
+export function newInitSignal(
+  seq: number,
+  pid: number,
+  token: string,
+): InitSignal {
   return {
     type: SignalType.INIT,
     seq,
+    pid,
     token,
   };
 }
