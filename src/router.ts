@@ -16,7 +16,7 @@ router.get("/ws", (ctx) => {
   }
   const ws = ctx.upgrade();
   // new and register a peer
-  const peer = newLocalizedPeer(new Date(), ws);
+  const peer = newLocalizedPeer(ws);
   registerPeer(peer);
   setupPeerWs(peer);
   // response
