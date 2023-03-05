@@ -11,13 +11,11 @@ import {
 export function newInitSignal(
   seq: number,
   pid: number,
-  token: string,
 ): InitSignal {
   return {
     typ: SignalType.INIT,
     seq,
     pid,
-    token,
   };
 }
 

@@ -22,7 +22,7 @@ export function registerPeer(localizedPeer: LocalizedPeer) {
   peerMap.set(localizedPeer.pid, localizedPeer);
 }
 
-export function newLocalizedPeer(exp: Date, ws: WebSocket) {
+export function newLocalizedPeer(ws: WebSocket) {
   // allocate a new pid
   let pid: number | undefined;
   for (let i = 0; i < 16; i++) {
@@ -37,7 +37,6 @@ export function newLocalizedPeer(exp: Date, ws: WebSocket) {
   // new peer
   const peer: LocalizedPeer = {
     pid,
-    exp,
     ws,
     sigSeq: 1,
   };

@@ -17,7 +17,7 @@ export function setupPeerWs(peer: LocalizedPeer) {
   ws.onopen = () => {
     // send init signal
     ws.send(BSON.serialize(
-      newInitSignal(peer.sigSeq++, peer.pid, "token"),
+      newInitSignal(peer.sigSeq++, peer.pid),
     ));
   };
 
