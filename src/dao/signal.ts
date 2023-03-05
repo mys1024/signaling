@@ -2,9 +2,9 @@ import {
   DataRecvSignal,
   DataSendSignal,
   InitSignal,
-  RespSignal,
+  ResSignal,
   SignalData,
-  SignalResp,
+  SignalRes,
   SignalType,
 } from "../types.ts";
 
@@ -21,16 +21,16 @@ export function newInitSignal(
   };
 }
 
-export function newRespSignal(
+export function newResSignal(
   seq: number,
   ack: number,
-  resp: SignalResp,
-): RespSignal {
+  res: SignalRes,
+): ResSignal {
   return {
-    typ: SignalType.RESP,
+    typ: SignalType.RES,
     seq,
     ack,
-    resp,
+    res,
   };
 }
 

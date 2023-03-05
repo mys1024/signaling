@@ -27,7 +27,7 @@ export interface LocalizedPeer extends Peer {
 export enum SignalType {
   // agent signal type
   INIT,
-  RESP, // response
+  RES, // response
   DATA_RECV,
 
   // peer signal type
@@ -43,7 +43,7 @@ export type SignalData =
   | BSON.Document
   | BSON.Document[];
 
-export enum SignalResp {
+export enum SignalRes {
   // response for DataSendSignal
   SENDED,
   OFFLINE,
@@ -65,10 +65,10 @@ export interface InitSignal extends BasicSignal {
   token: string;
 }
 
-export interface RespSignal extends BasicSignal {
-  typ: SignalType.RESP;
+export interface ResSignal extends BasicSignal {
+  typ: SignalType.RES;
   ack: number; // acknowledge a signal sequence number
-  resp: SignalResp;
+  res: SignalRes;
 }
 
 export interface DataRecvSignal extends BasicSignal {
@@ -85,7 +85,7 @@ export interface DataSendSignal extends BasicSignal {
 
 export type AgentSignal =
   | InitSignal
-  | RespSignal
+  | ResSignal
   | DataRecvSignal;
 
 export type PeerSignal = DataSendSignal;

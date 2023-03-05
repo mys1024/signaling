@@ -1,10 +1,10 @@
-import { LocalizedPeer, PeerSignal, SignalResp, SignalType } from "./types.ts";
+import { LocalizedPeer, PeerSignal, SignalRes, SignalType } from "./types.ts";
 import { BSON } from "./deps.ts";
 import { getPeer } from "./dao/peer.ts";
 import {
   newDataRecvSignal,
   newInitSignal,
-  newRespSignal,
+  newResSignal,
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
 
@@ -26,7 +26,7 @@ export function setupPeerWs(peer: LocalizedPeer) {
     const sig = syncIgnoreError(() => BSON.deserialize(e.data) as PeerSignal);
     if (!sig) {
       ws.send(BSON.serialize(
-        newRespSignal(peer.sigSeq++, -1, SignalResp.INVALID_SIGNAL),
+        newResSignal(peer.sigSeq++, -1, SignalRes.INVALID_SIGNAL),
       ));
       return;
     }
@@ -37,14 +37,14 @@ export function setupPeerWs(peer: LocalizedPeer) {
         const receiver = getPeer(sig.to);
         if (!receiver) {
           ws.send(BSON.serialize(
-            newRespSignal(peer.sigSeq++, sig.seq, SignalResp.NOT_FOUND),
+            newResSignal(peer.sigSeq++, sig.seq, SignalRes.NOT_FOUND),
           ));
           break;
         }
         // forward data to receiver
         if (!receiver.ws) {
           ws.send(BSON.serialize(
-            newRespSignal(peer.sigSeq++, sig.seq, SignalResp.OFFLINE),
+            newResSignal(peer.sigSeq++, sig.seq, SignalRes.OFFLINE),
           ));
           break;
         }
@@ -52,13 +52,13 @@ export function setupPeerWs(peer: LocalizedPeer) {
           newDataRecvSignal(receiver.sigSeq++, peer.pid, sig.data),
         ));
         ws.send(BSON.serialize(
-          newRespSignal(peer.sigSeq++, sig.seq, SignalResp.SENDED),
+          newResSignal(peer.sigSeq++, sig.seq, SignalRes.SENDED),
         ));
         break;
       }
       default: {
         ws.send(BSON.serialize(
-          newRespSignal(peer.sigSeq++, sig.seq, SignalResp.INVALID_SIGNAL_TYPE),
+          newResSignal(peer.sigSeq++, sig.seq, SignalRes.INVALID_SIGNAL_TYPE),
         ));
         break;
       }
