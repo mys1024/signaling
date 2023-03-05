@@ -14,14 +14,14 @@ export function setupPeerWs(peer: LocalizedPeer) {
     throw new Error(`Peer's property 'ws' is not set.`);
   }
 
-  ws.onopen = () => {
+  ws.addEventListener("open", () => {
     // send init signal
     ws.send(BSON.serialize(
       newInitSignal(peer.sigSeq++, peer.pid),
     ));
-  };
+  });
 
-  ws.onmessage = (e) => {
+  ws.addEventListener("message", (e) => {
     // deserialize peer signal
     const sig = syncIgnoreError(() => BSON.deserialize(e.data) as PeerSignal);
     if (!sig) {
@@ -63,5 +63,5 @@ export function setupPeerWs(peer: LocalizedPeer) {
         break;
       }
     }
-  };
+  });
 }
