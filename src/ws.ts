@@ -8,63 +8,49 @@ import {
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
 
-export function setupPeerWs(localizedPeer: LocalizedPeer) {
-  const ws = localizedPeer.ws;
+export function setupPeerWs(peer: LocalizedPeer) {
+  const ws = peer.ws;
 
   ws.onopen = () => {
     // send init signal
-    ws.send(BSON.serialize(newInitSignal(
-      localizedPeer.signalSeq++,
-      localizedPeer.pid,
-      "token",
-    )));
+    ws.send(BSON.serialize(
+      newInitSignal(peer.sigSeq++, peer.pid, "token"),
+    ));
   };
 
   ws.onmessage = (e) => {
     // deserialize peer signal
-    const signal = syncIgnoreError(() =>
-      BSON.deserialize(e.data) as PeerSignal
-    );
-    if (!signal) {
-      ws.send(BSON.serialize(newRespSignal(
-        localizedPeer.signalSeq++,
-        -1,
-        SignalResp.INVALID_SIGNAL,
-      )));
+    const sig = syncIgnoreError(() => BSON.deserialize(e.data) as PeerSignal);
+    if (!sig) {
+      ws.send(BSON.serialize(
+        newRespSignal(peer.sigSeq++, -1, SignalResp.INVALID_SIGNAL),
+      ));
       return;
     }
     // handle peer signal
-    switch (signal.type) {
+    switch (sig.typ) {
       case SignalType.DATA_SEND: {
         // get receiver
-        const receiver = getPeer(signal.receiver);
+        const receiver = getPeer(sig.to);
         if (!receiver) {
-          ws.send(BSON.serialize(newRespSignal(
-            localizedPeer.signalSeq++,
-            signal.seq,
-            SignalResp.NOT_FOUND,
-          )));
+          ws.send(BSON.serialize(
+            newRespSignal(peer.sigSeq++, sig.seq, SignalResp.NOT_FOUND),
+          ));
           break;
         }
         // forward data to receiver
-        receiver.ws.send(BSON.serialize(newDataRecvSignal(
-          receiver.signalSeq++,
-          localizedPeer.pid,
-          signal.data,
-        )));
-        ws.send(BSON.serialize(newRespSignal(
-          localizedPeer.signalSeq++,
-          signal.seq,
-          SignalResp.SENDED,
-        )));
+        receiver.ws.send(BSON.serialize(
+          newDataRecvSignal(receiver.sigSeq++, peer.pid, sig.data),
+        ));
+        ws.send(BSON.serialize(
+          newRespSignal(peer.sigSeq++, sig.seq, SignalResp.SENDED),
+        ));
         break;
       }
       default: {
-        ws.send(BSON.serialize(newRespSignal(
-          localizedPeer.signalSeq++,
-          signal.seq,
-          SignalResp.INVALID_SIGNAL_TYPE,
-        )));
+        ws.send(BSON.serialize(
+          newRespSignal(peer.sigSeq++, sig.seq, SignalResp.INVALID_SIGNAL_TYPE),
+        ));
         break;
       }
     }

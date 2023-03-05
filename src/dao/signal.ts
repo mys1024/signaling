@@ -14,7 +14,7 @@ export function newInitSignal(
   token: string,
 ): InitSignal {
   return {
-    type: SignalType.INIT,
+    typ: SignalType.INIT,
     seq,
     pid,
     token,
@@ -27,7 +27,7 @@ export function newRespSignal(
   resp: SignalResp,
 ): RespSignal {
   return {
-    type: SignalType.RESP,
+    typ: SignalType.RESP,
     seq,
     ack,
     resp,
@@ -36,26 +36,26 @@ export function newRespSignal(
 
 export function newDataRecvSignal(
   seq: number,
-  sender: number,
+  from: number,
   data: SignalData,
 ): DataRecvSignal {
   return {
-    type: SignalType.DATA_RECV,
+    typ: SignalType.DATA_RECV,
     seq,
-    sender,
+    from,
     data,
   };
 }
 
 export function newDataSendSignal(
   seq: number,
-  receiver: number,
+  to: number,
   data: SignalData,
 ): DataSendSignal {
   return {
-    type: SignalType.DATA_SEND,
+    typ: SignalType.DATA_SEND,
     seq,
-    receiver,
+    to,
     data,
   };
 }

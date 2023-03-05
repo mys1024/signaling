@@ -39,7 +39,7 @@ export function newLocalizedPeer(exp: Date, ws: WebSocket) {
     pid,
     exp,
     ws,
-    signalSeq: 1,
+    sigSeq: 1,
   };
   // return
   return peer;

@@ -16,7 +16,7 @@ export interface LocalizedPeer extends Peer {
   /**
    * Signal sequence number.
    */
-  signalSeq: number;
+  sigSeq: number;
 
   /**
    * Peer's Websocket instance.
@@ -54,31 +54,31 @@ export enum SignalResp {
 }
 
 export interface BasicSignal {
-  type: SignalType;
+  typ: SignalType;
   seq: number; // signal sequence number
 }
 
 export interface InitSignal extends BasicSignal {
-  type: SignalType.INIT;
+  typ: SignalType.INIT;
   pid: number;
   token: string;
 }
 
 export interface RespSignal extends BasicSignal {
-  type: SignalType.RESP;
+  typ: SignalType.RESP;
   ack: number; // acknowledge a signal sequence number
   resp: SignalResp;
 }
 
 export interface DataRecvSignal extends BasicSignal {
-  type: SignalType.DATA_RECV;
-  sender: number; // sender pid
+  typ: SignalType.DATA_RECV;
+  from: number; // sender pid
   data: SignalData;
 }
 
 export interface DataSendSignal extends BasicSignal {
-  type: SignalType.DATA_SEND;
-  receiver: number; // receiver pid
+  typ: SignalType.DATA_SEND;
+  to: number; // receiver pid
   data: SignalData;
 }
 
