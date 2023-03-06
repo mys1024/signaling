@@ -1,6 +1,6 @@
 import { LocalizedPeer, PeerSignal, SignalRes, SignalType } from "./types.ts";
 import { BSON } from "./deps.ts";
-import { getPeer } from "./dao/peer.ts";
+import { deregisterPeer, getPeer } from "./dao/peer.ts";
 import {
   newDataRecvSignal,
   newInitSignal,
@@ -19,6 +19,11 @@ export function setupPeerWs(peer: LocalizedPeer) {
     ws.send(BSON.serialize(
       newInitSignal(peer.sigSeq++, peer.pid),
     ));
+  });
+
+  ws.addEventListener("close", () => {
+    console.log("close", peer.pid);
+    deregisterPeer(peer.pid);
   });
 
   ws.addEventListener("message", (e) => {
