@@ -7,7 +7,7 @@ import { signJwt } from "./utils/auth.ts";
 const router = new oak.Router();
 
 router.get("/", (ctx) => {
-  ctx.response.body = "Hello from Signaling";
+  ctx.response.body = "Hello from Signaling!";
 });
 
 router.get("/ws", async (ctx) => {
