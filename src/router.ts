@@ -30,7 +30,6 @@ router.get("/ws", async (ctx) => {
 router.get("/ws/recover", jwt(), (ctx) => {
   const pid = ctx.state.jwt.payload.pid;
   const token = ctx.state.jwt.token;
-  console.log(pid, token);
   // get peer by pid
   const peer = getPeer(pid);
   if (!peer) {
