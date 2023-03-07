@@ -8,7 +8,7 @@ import {
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
 
-export function setupPeerWs(peer: LocalizedPeer) {
+export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
   const ws = peer.ws;
   if (!ws) {
     throw new Error(`Peer's property 'ws' is not set.`);
@@ -17,13 +17,16 @@ export function setupPeerWs(peer: LocalizedPeer) {
   ws.addEventListener("open", () => {
     // send init signal
     ws.send(BSON.serialize(
-      newInitSignal(peer.sigSeq++, peer.pid),
+      newInitSignal(peer.sigSeq++, peer.pid, token, exp),
     ));
   });
 
   ws.addEventListener("close", () => {
-    console.log("close", peer.pid);
-    deregisterPeer(peer.pid);
+    if (Date.now() >= peer.exp.valueOf()) {
+      deregisterPeer(peer.pid);
+    } else {
+      peer.ws = undefined;
+    }
   });
 
   ws.addEventListener("message", (e) => {

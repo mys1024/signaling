@@ -26,7 +26,7 @@ export function deregisterPeer(pid: number) {
   peerMap.delete(pid);
 }
 
-export function newLocalizedPeer(ws: WebSocket) {
+export function newLocalizedPeer(ws: WebSocket, exp: Date) {
   // allocate a new pid
   let pid: number | undefined;
   for (let i = 0; i < 16; i++) {
@@ -41,6 +41,7 @@ export function newLocalizedPeer(ws: WebSocket) {
   // new peer
   const peer: LocalizedPeer = {
     pid,
+    exp,
     ws,
     sigSeq: 1,
   };
