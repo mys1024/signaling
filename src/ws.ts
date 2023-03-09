@@ -33,9 +33,6 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
     // deserialize peer signal
     const sig = syncIgnoreError(() => BSON.deserialize(e.data) as PeerSignal);
     if (!sig) {
-      ws.send(BSON.serialize(
-        newResSignal(peer.sigSeq++, -1, SignalRes.INVALID_SIGNAL),
-      ));
       return;
     }
     // handle peer signal
@@ -61,12 +58,6 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         ));
         ws.send(BSON.serialize(
           newResSignal(peer.sigSeq++, sig.seq, SignalRes.SENDED),
-        ));
-        break;
-      }
-      default: {
-        ws.send(BSON.serialize(
-          newResSignal(peer.sigSeq++, sig.seq, SignalRes.INVALID_SIGNAL_TYPE),
         ));
         break;
       }

@@ -44,14 +44,9 @@ export type SignalData =
   | BSON.Document[];
 
 export enum SignalRes {
-  // response for DataSendSignal
   SENDED,
   OFFLINE,
   NOT_FOUND,
-
-  // response for others
-  INVALID_SIGNAL,
-  INVALID_SIGNAL_TYPE,
 }
 
 export interface BasicSignal {
