@@ -7,6 +7,7 @@ import {
   newResSignal,
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
+import { signJwt } from "./utils/auth.ts";
 
 export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
   const ws = peer.ws;
@@ -29,7 +30,7 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
     }
   });
 
-  ws.addEventListener("message", (e) => {
+  ws.addEventListener("message", async (e) => {
     // deserialize peer signal
     const sig = syncIgnoreError(() => BSON.deserialize(e.data) as PeerSignal);
     if (!sig) {
@@ -58,6 +59,15 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         ));
         ws.send(BSON.serialize(
           newResSignal(peer.sigSeq++, sig.seq, SignalRes.SENDED),
+        ));
+        break;
+      }
+      case SignalType.RENEWAL: {
+        const exp = new Date(Date.now() + 60 * 60 * 1000); // 1h
+        peer.exp = exp;
+        const token = await signJwt(exp, { pid: peer.pid });
+        ws.send(BSON.serialize(
+          newInitSignal(peer.sigSeq++, peer.pid, token, exp),
         ));
         break;
       }
