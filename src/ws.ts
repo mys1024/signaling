@@ -2,9 +2,9 @@ import { LocalizedPeer, PeerSignal, SignalRes, SignalType } from "./types.ts";
 import { BSON } from "./deps.ts";
 import { deregisterPeer, getPeer } from "./dao/peer.ts";
 import {
-  newDataRecvSignal,
-  newInitSignal,
-  newResSignal,
+  bsonDataRecvSignal,
+  bsonInitSignal,
+  bsonResSignal,
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
 import { signJwt } from "./utils/auth.ts";
@@ -17,9 +17,7 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
 
   ws.addEventListener("open", () => {
     // send init signal
-    ws.send(BSON.serialize(
-      newInitSignal(peer.sigSeq++, peer.pid, token, exp),
-    ));
+    ws.send(bsonInitSignal(peer.sigSeq++, peer.pid, token, exp));
   });
 
   ws.addEventListener("close", () => {
@@ -42,33 +40,33 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         // get receiver
         const receiver = getPeer(sig.to);
         if (!receiver) {
-          ws.send(BSON.serialize(
-            newResSignal(peer.sigSeq++, sig.seq, SignalRes.NOT_FOUND),
-          ));
+          ws.send(
+            bsonDataRecvSignal(peer.sigSeq++, sig.seq, SignalRes.NOT_FOUND),
+          );
           break;
         }
         // forward data to receiver
         if (!receiver.ws) {
-          ws.send(BSON.serialize(
-            newResSignal(peer.sigSeq++, sig.seq, SignalRes.OFFLINE),
-          ));
+          ws.send(
+            bsonResSignal(peer.sigSeq++, sig.seq, SignalRes.OFFLINE),
+          );
           break;
         }
-        receiver.ws.send(BSON.serialize(
-          newDataRecvSignal(receiver.sigSeq++, peer.pid, sig.data),
-        ));
-        ws.send(BSON.serialize(
-          newResSignal(peer.sigSeq++, sig.seq, SignalRes.SENDED),
-        ));
+        receiver.ws.send(
+          bsonDataRecvSignal(receiver.sigSeq++, peer.pid, sig.data),
+        );
+        ws.send(
+          bsonResSignal(peer.sigSeq++, sig.seq, SignalRes.SENDED),
+        );
         break;
       }
       case SignalType.RENEWAL: {
         const exp = new Date(Date.now() + 60 * 60 * 1000); // 1h
         peer.exp = exp;
         const token = await signJwt(exp, { pid: peer.pid });
-        ws.send(BSON.serialize(
-          newInitSignal(peer.sigSeq++, peer.pid, token, exp),
-        ));
+        ws.send(
+          bsonInitSignal(peer.sigSeq++, peer.pid, token, exp),
+        );
         break;
       }
     }

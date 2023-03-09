@@ -1,63 +1,79 @@
+import { BSON } from "../deps.ts";
 import {
   DataRecvSignal,
   DataSendSignal,
   InitSignal,
+  RenewalSignal,
   ResSignal,
   SignalData,
   SignalRes,
   SignalType,
 } from "../types.ts";
 
-export function newInitSignal(
+export function bsonInitSignal(
   seq: number,
   pid: number,
   token: string,
   exp: Date,
-): InitSignal {
-  return {
+) {
+  const signal: InitSignal = {
     typ: SignalType.INIT,
     seq,
     pid,
     token,
     exp,
   };
+  return BSON.serialize(signal);
 }
 
-export function newResSignal(
+export function bsonResSignal(
   seq: number,
   ack: number,
   res: SignalRes,
-): ResSignal {
-  return {
+) {
+  const signal: ResSignal = {
     typ: SignalType.RES,
     seq,
     ack,
     res,
   };
+  return BSON.serialize(signal);
 }
 
-export function newDataRecvSignal(
+export function bsonDataRecvSignal(
   seq: number,
   from: number,
   data: SignalData,
-): DataRecvSignal {
-  return {
+) {
+  const signal: DataRecvSignal = {
     typ: SignalType.DATA_RECV,
     seq,
     from,
     data,
   };
+  return BSON.serialize(signal);
 }
 
-export function newDataSendSignal(
+export function bsonDataSendSignal(
   seq: number,
   to: number,
   data: SignalData,
-): DataSendSignal {
-  return {
+) {
+  const signal: DataSendSignal = {
     typ: SignalType.DATA_SEND,
     seq,
     to,
     data,
   };
+  return BSON.serialize(signal);
+}
+
+export function bsonRenewalSignal(
+  seq: number,
+) {
+  const signal: RenewalSignal = {
+    typ: SignalType.RENEWAL,
+    seq,
+  };
+  return BSON.serialize(signal);
 }
