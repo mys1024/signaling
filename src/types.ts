@@ -47,7 +47,7 @@ export type SignalData =
 export enum SignalRes {
   SENDED,
   OFFLINE,
-  NOT_FOUND,
+  NOTFOUND,
 }
 
 export interface BasicSignal {

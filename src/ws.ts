@@ -40,7 +40,7 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         const receiver = getPeer(sig.to);
         if (!receiver) {
           ws.send(
-            bsonDataRecvSignal(peer.sigSeq++, sig.seq, SignalRes.NOT_FOUND),
+            bsonDataRecvSignal(peer.sigSeq++, sig.seq, SignalRes.NOTFOUND),
           );
           break;
         }
