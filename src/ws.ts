@@ -85,6 +85,15 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         );
         break;
       }
+      case PeerSignalType.CLOSE: {
+        if (ws.CLOSED) {
+          return;
+        }
+        ws.close();
+        if (sig.deregister) {
+          deregisterPeer(peer.pid);
+        }
+      }
     }
   });
 }
