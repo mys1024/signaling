@@ -40,6 +40,22 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
     }
     // handle peer signal
     switch (sig.typ) {
+      case PeerSignalType.RENEWAL: {
+        const exp = new Date(Date.now() + 60 * 60 * 1000); // 1h
+        peer.exp = exp;
+        const token = await signJwt(exp, { pid: peer.pid });
+        ws.send(
+          bsonConfSignal(peer.sigSeq++, peer.pid, token, exp),
+        );
+        break;
+      }
+      case PeerSignalType.CLOSE: {
+        ws.close();
+        if (sig.deregister) {
+          deregisterPeer(peer.pid);
+        }
+        break;
+      }
       case PeerSignalType.DATA_SEND: {
         // get receiver
         const receiver = getPeer(sig.to);
@@ -75,24 +91,6 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
           ),
         );
         break;
-      }
-      case PeerSignalType.RENEWAL: {
-        const exp = new Date(Date.now() + 60 * 60 * 1000); // 1h
-        peer.exp = exp;
-        const token = await signJwt(exp, { pid: peer.pid });
-        ws.send(
-          bsonConfSignal(peer.sigSeq++, peer.pid, token, exp),
-        );
-        break;
-      }
-      case PeerSignalType.CLOSE: {
-        if (ws.CLOSED) {
-          return;
-        }
-        ws.close();
-        if (sig.deregister) {
-          deregisterPeer(peer.pid);
-        }
       }
     }
   });
