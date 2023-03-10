@@ -1,14 +1,15 @@
 import { BSON } from "../deps.ts";
 import {
+  AgentSignalType,
   CloseSignal,
   ConfSignal,
   DataReceiptSignal,
   DataRecvSignal,
   DataSendSignal,
+  PeerSignalType,
   RenewalSignal,
   SignalData,
   SignalDataReceiptStatus,
-  SignalType,
 } from "../types/signal.ts";
 
 export function bsonConfSignal(
@@ -18,7 +19,7 @@ export function bsonConfSignal(
   exp: Date,
 ) {
   const signal: ConfSignal = {
-    typ: SignalType.CONF,
+    typ: AgentSignalType.CONF,
     seq,
     pid,
     token,
@@ -33,7 +34,7 @@ export function bsonDataRecvSignal(
   data: SignalData,
 ) {
   const signal: DataRecvSignal = {
-    typ: SignalType.DATA_RECV,
+    typ: AgentSignalType.DATA_RECV,
     seq,
     from,
     data,
@@ -47,7 +48,7 @@ export function bsonDataReceiptSignal(
   sta: SignalDataReceiptStatus,
 ) {
   const signal: DataReceiptSignal = {
-    typ: SignalType.DATA_RECEIPT,
+    typ: AgentSignalType.DATA_RECEIPT,
     seq,
     ack,
     sta,
@@ -60,7 +61,7 @@ export function bsonCloseSignal(
   deregister: boolean,
 ) {
   const signal: CloseSignal = {
-    typ: SignalType.CLOSE,
+    typ: PeerSignalType.CLOSE,
     seq,
     deregister,
   };
@@ -71,7 +72,7 @@ export function bsonRenewalSignal(
   seq: number,
 ) {
   const signal: RenewalSignal = {
-    typ: SignalType.RENEWAL,
+    typ: PeerSignalType.RENEWAL,
     seq,
   };
   return BSON.serialize(signal);
@@ -83,7 +84,7 @@ export function bsonDataSendSignal(
   data: SignalData,
 ) {
   const signal: DataSendSignal = {
-    typ: SignalType.DATA_SEND,
+    typ: PeerSignalType.DATA_SEND,
     seq,
     to,
     data,

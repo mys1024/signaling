@@ -1,7 +1,7 @@
 import {
   PeerSignal,
+  PeerSignalType,
   SignalDataReceiptStatus,
-  SignalType,
 } from "./types/signal.ts";
 import { LocalizedPeer } from "./types/peer.ts";
 import { BSON } from "./deps.ts";
@@ -40,7 +40,7 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
     }
     // handle peer signal
     switch (sig.typ) {
-      case SignalType.DATA_SEND: {
+      case PeerSignalType.DATA_SEND: {
         // get receiver
         const receiver = getPeer(sig.to);
         if (!receiver) {
@@ -76,7 +76,7 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         );
         break;
       }
-      case SignalType.RENEWAL: {
+      case PeerSignalType.RENEWAL: {
         const exp = new Date(Date.now() + 60 * 60 * 1000); // 1h
         peer.exp = exp;
         const token = await signJwt(exp, { pid: peer.pid });
