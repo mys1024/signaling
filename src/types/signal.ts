@@ -1,28 +1,4 @@
-import type { BSON, djwt } from "./deps.ts";
-
-export interface Peer {
-  /**
-   * Peer's ID. The value should be an integer in the interval [1, 0x7F_FF_FF_FF].
-   */
-  pid: number;
-
-  /**
-   * Expiration time.
-   */
-  exp: Date;
-}
-
-export interface LocalizedPeer extends Peer {
-  /**
-   * Signal sequence number.
-   */
-  sigSeq: number;
-
-  /**
-   * Peer's Websocket instance.
-   */
-  ws?: WebSocket;
-}
+import type { BSON } from "../deps.ts";
 
 export enum SignalType {
   // agent signal type
@@ -65,7 +41,7 @@ export interface ConfSignal extends BasicSignal {
 
 export interface ResSignal extends BasicSignal {
   typ: SignalType.RES;
-  ack: number; // acknowledge a signal sequence number
+  ack: number; // acknowledge a signal with the specific sequence number
   res: SignalRes;
 }
 
@@ -101,7 +77,3 @@ export type PeerSignal =
   | CloseSignal;
 
 export type Signal = AgentSignal | PeerSignal;
-
-export interface JwtPayload extends djwt.Payload {
-  pid: number;
-}

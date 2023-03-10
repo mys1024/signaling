@@ -1,4 +1,4 @@
-import type { LocalizedPeer } from "../types.ts";
+import type { LocalizedPeer } from "../types/peer.ts";
 import { randomInt } from "../utils/plain.ts";
 
 const peerMap = new Map<number, LocalizedPeer>(); // pid -> peer

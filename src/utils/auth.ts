@@ -1,4 +1,4 @@
-import type { JwtPayload } from "../types.ts";
+import type { JwtPayload } from "../types/jwt.ts";
 import { djwt } from "../deps.ts";
 import { JWT_KEY } from "../config.ts";
 

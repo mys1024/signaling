@@ -1,4 +1,4 @@
-import type { JwtPayload } from "../types.ts";
+import type { JwtPayload } from "../types/jwt.ts";
 import { oak } from "../deps.ts";
 import { verifyJwt } from "../utils/auth.ts";
 

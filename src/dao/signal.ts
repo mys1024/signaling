@@ -9,7 +9,7 @@ import {
   SignalData,
   SignalRes,
   SignalType,
-} from "../types.ts";
+} from "../types/signal.ts";
 
 export function bsonConfSignal(
   seq: number,

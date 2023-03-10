@@ -1,4 +1,5 @@
-import { LocalizedPeer, PeerSignal, SignalRes, SignalType } from "./types.ts";
+import { PeerSignal, SignalRes, SignalType } from "./types/signal.ts";
+import { LocalizedPeer } from "./types/peer.ts";
 import { BSON } from "./deps.ts";
 import { deregisterPeer, getPeer } from "./dao/peer.ts";
 import {
