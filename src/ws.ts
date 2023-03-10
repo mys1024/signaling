@@ -2,8 +2,8 @@ import { LocalizedPeer, PeerSignal, SignalRes, SignalType } from "./types.ts";
 import { BSON } from "./deps.ts";
 import { deregisterPeer, getPeer } from "./dao/peer.ts";
 import {
+  bsonConfSignal,
   bsonDataRecvSignal,
-  bsonInitSignal,
   bsonResSignal,
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
@@ -16,8 +16,7 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
   }
 
   ws.addEventListener("open", () => {
-    // send init signal
-    ws.send(bsonInitSignal(peer.sigSeq++, peer.pid, token, exp));
+    ws.send(bsonConfSignal(peer.sigSeq++, peer.pid, token, exp));
   });
 
   ws.addEventListener("close", () => {
@@ -65,7 +64,7 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         peer.exp = exp;
         const token = await signJwt(exp, { pid: peer.pid });
         ws.send(
-          bsonInitSignal(peer.sigSeq++, peer.pid, token, exp),
+          bsonConfSignal(peer.sigSeq++, peer.pid, token, exp),
         );
         break;
       }

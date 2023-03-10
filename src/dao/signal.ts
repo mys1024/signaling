@@ -1,8 +1,8 @@
 import { BSON } from "../deps.ts";
 import {
+  ConfSignal,
   DataRecvSignal,
   DataSendSignal,
-  InitSignal,
   RenewalSignal,
   ResSignal,
   SignalData,
@@ -10,14 +10,14 @@ import {
   SignalType,
 } from "../types.ts";
 
-export function bsonInitSignal(
+export function bsonConfSignal(
   seq: number,
   pid: number,
   token: string,
   exp: Date,
 ) {
-  const signal: InitSignal = {
-    typ: SignalType.INIT,
+  const signal: ConfSignal = {
+    typ: SignalType.CONF,
     seq,
     pid,
     token,

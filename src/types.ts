@@ -26,7 +26,7 @@ export interface LocalizedPeer extends Peer {
 
 export enum SignalType {
   // agent signal type
-  INIT,
+  CONF,
   RES, // response
   DATA_RECV,
 
@@ -55,8 +55,8 @@ export interface BasicSignal {
   seq: number; // signal sequence number
 }
 
-export interface InitSignal extends BasicSignal {
-  typ: SignalType.INIT;
+export interface ConfSignal extends BasicSignal {
+  typ: SignalType.CONF;
   pid: number;
   token: string;
   exp: Date;
@@ -85,7 +85,7 @@ export interface RenewalSignal extends BasicSignal {
 }
 
 export type AgentSignal =
-  | InitSignal
+  | ConfSignal
   | ResSignal
   | DataRecvSignal;
 
