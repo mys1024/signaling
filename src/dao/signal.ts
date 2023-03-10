@@ -1,5 +1,6 @@
 import { BSON } from "../deps.ts";
 import {
+  CloseSignal,
   ConfSignal,
   DataRecvSignal,
   DataSendSignal,
@@ -74,6 +75,18 @@ export function bsonRenewalSignal(
   const signal: RenewalSignal = {
     typ: SignalType.RENEWAL,
     seq,
+  };
+  return BSON.serialize(signal);
+}
+
+export function bsonCloseSignal(
+  seq: number,
+  deregister: boolean,
+) {
+  const signal: CloseSignal = {
+    typ: SignalType.CLOSE,
+    seq,
+    deregister,
   };
   return BSON.serialize(signal);
 }

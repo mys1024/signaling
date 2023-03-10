@@ -33,6 +33,7 @@ export enum SignalType {
   // peer signal type
   DATA_SEND,
   RENEWAL,
+  CLOSE,
 }
 
 export type SignalData =
@@ -84,6 +85,11 @@ export interface RenewalSignal extends BasicSignal {
   typ: SignalType.RENEWAL;
 }
 
+export interface CloseSignal extends BasicSignal {
+  typ: SignalType.CLOSE;
+  deregister: boolean;
+}
+
 export type AgentSignal =
   | ConfSignal
   | ResSignal
@@ -91,7 +97,8 @@ export type AgentSignal =
 
 export type PeerSignal =
   | DataSendSignal
-  | RenewalSignal;
+  | RenewalSignal
+  | CloseSignal;
 
 export type Signal = AgentSignal | PeerSignal;
 
