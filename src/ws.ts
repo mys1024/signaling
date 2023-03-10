@@ -1,11 +1,15 @@
-import { PeerSignal, SignalRes, SignalType } from "./types/signal.ts";
+import {
+  PeerSignal,
+  SignalDataReceiptStatus,
+  SignalType,
+} from "./types/signal.ts";
 import { LocalizedPeer } from "./types/peer.ts";
 import { BSON } from "./deps.ts";
 import { deregisterPeer, getPeer } from "./dao/peer.ts";
 import {
   bsonConfSignal,
+  bsonDataReceiptSignal,
   bsonDataRecvSignal,
-  bsonResSignal,
 } from "./dao/signal.ts";
 import { syncIgnoreError } from "./utils/plain.ts";
 import { signJwt } from "./utils/auth.ts";
@@ -41,14 +45,22 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
         const receiver = getPeer(sig.to);
         if (!receiver) {
           ws.send(
-            bsonDataRecvSignal(peer.sigSeq++, sig.seq, SignalRes.NOTFOUND),
+            bsonDataReceiptSignal(
+              peer.sigSeq++,
+              sig.seq,
+              SignalDataReceiptStatus.RECEIVER_NOTFOUND,
+            ),
           );
           break;
         }
         // forward data to receiver
         if (!receiver.ws) {
           ws.send(
-            bsonResSignal(peer.sigSeq++, sig.seq, SignalRes.OFFLINE),
+            bsonDataReceiptSignal(
+              peer.sigSeq++,
+              sig.seq,
+              SignalDataReceiptStatus.RECEIVER_OFFLINE,
+            ),
           );
           break;
         }
@@ -56,7 +68,11 @@ export function setupPeerWs(peer: LocalizedPeer, token: string, exp: Date) {
           bsonDataRecvSignal(receiver.sigSeq++, peer.pid, sig.data),
         );
         ws.send(
-          bsonResSignal(peer.sigSeq++, sig.seq, SignalRes.SENDED),
+          bsonDataReceiptSignal(
+            peer.sigSeq++,
+            sig.seq,
+            SignalDataReceiptStatus.SENDED,
+          ),
         );
         break;
       }

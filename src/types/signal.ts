@@ -3,13 +3,13 @@ import type { BSON } from "../deps.ts";
 export enum SignalType {
   // agent signal type
   CONF,
-  RES, // response
   DATA_RECV,
+  DATA_RECEIPT,
 
   // peer signal type
-  DATA_SEND,
-  RENEWAL,
   CLOSE,
+  RENEWAL,
+  DATA_SEND,
 }
 
 export type SignalData =
@@ -21,10 +21,10 @@ export type SignalData =
   | BSON.Document
   | BSON.Document[];
 
-export enum SignalRes {
+export enum SignalDataReceiptStatus {
   SENDED,
-  OFFLINE,
-  NOTFOUND,
+  RECEIVER_OFFLINE,
+  RECEIVER_NOTFOUND,
 }
 
 export interface BasicSignal {
@@ -39,16 +39,25 @@ export interface ConfSignal extends BasicSignal {
   exp: Date;
 }
 
-export interface ResSignal extends BasicSignal {
-  typ: SignalType.RES;
-  ack: number; // acknowledge a signal with the specific sequence number
-  res: SignalRes;
-}
-
 export interface DataRecvSignal extends BasicSignal {
   typ: SignalType.DATA_RECV;
   from: number; // sender pid
   data: SignalData;
+}
+
+export interface DataReceiptSignal extends BasicSignal {
+  typ: SignalType.DATA_RECEIPT;
+  ack: number;
+  sta: SignalDataReceiptStatus;
+}
+
+export interface CloseSignal extends BasicSignal {
+  typ: SignalType.CLOSE;
+  deregister: boolean;
+}
+
+export interface RenewalSignal extends BasicSignal {
+  typ: SignalType.RENEWAL;
 }
 
 export interface DataSendSignal extends BasicSignal {
@@ -57,23 +66,14 @@ export interface DataSendSignal extends BasicSignal {
   data: SignalData;
 }
 
-export interface RenewalSignal extends BasicSignal {
-  typ: SignalType.RENEWAL;
-}
-
-export interface CloseSignal extends BasicSignal {
-  typ: SignalType.CLOSE;
-  deregister: boolean;
-}
-
 export type AgentSignal =
   | ConfSignal
-  | ResSignal
-  | DataRecvSignal;
+  | DataRecvSignal
+  | DataReceiptSignal;
 
 export type PeerSignal =
-  | DataSendSignal
+  | CloseSignal
   | RenewalSignal
-  | CloseSignal;
+  | DataSendSignal;
 
 export type Signal = AgentSignal | PeerSignal;

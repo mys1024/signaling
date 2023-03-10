@@ -2,12 +2,12 @@ import { BSON } from "../deps.ts";
 import {
   CloseSignal,
   ConfSignal,
+  DataReceiptSignal,
   DataRecvSignal,
   DataSendSignal,
   RenewalSignal,
-  ResSignal,
   SignalData,
-  SignalRes,
+  SignalDataReceiptStatus,
   SignalType,
 } from "../types/signal.ts";
 
@@ -27,20 +27,6 @@ export function bsonConfSignal(
   return BSON.serialize(signal);
 }
 
-export function bsonResSignal(
-  seq: number,
-  ack: number,
-  res: SignalRes,
-) {
-  const signal: ResSignal = {
-    typ: SignalType.RES,
-    seq,
-    ack,
-    res,
-  };
-  return BSON.serialize(signal);
-}
-
 export function bsonDataRecvSignal(
   seq: number,
   from: number,
@@ -55,16 +41,28 @@ export function bsonDataRecvSignal(
   return BSON.serialize(signal);
 }
 
-export function bsonDataSendSignal(
+export function bsonDataReceiptSignal(
   seq: number,
-  to: number,
-  data: SignalData,
+  ack: number,
+  sta: SignalDataReceiptStatus,
 ) {
-  const signal: DataSendSignal = {
-    typ: SignalType.DATA_SEND,
+  const signal: DataReceiptSignal = {
+    typ: SignalType.DATA_RECEIPT,
     seq,
-    to,
-    data,
+    ack,
+    sta,
+  };
+  return BSON.serialize(signal);
+}
+
+export function bsonCloseSignal(
+  seq: number,
+  deregister: boolean,
+) {
+  const signal: CloseSignal = {
+    typ: SignalType.CLOSE,
+    seq,
+    deregister,
   };
   return BSON.serialize(signal);
 }
@@ -79,14 +77,16 @@ export function bsonRenewalSignal(
   return BSON.serialize(signal);
 }
 
-export function bsonCloseSignal(
+export function bsonDataSendSignal(
   seq: number,
-  deregister: boolean,
+  to: number,
+  data: SignalData,
 ) {
-  const signal: CloseSignal = {
-    typ: SignalType.CLOSE,
+  const signal: DataSendSignal = {
+    typ: SignalType.DATA_SEND,
     seq,
-    deregister,
+    to,
+    data,
   };
   return BSON.serialize(signal);
 }
